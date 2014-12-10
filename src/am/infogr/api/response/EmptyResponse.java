@@ -7,8 +7,8 @@ import java.net.HttpURLConnection;
  */
 public class EmptyResponse extends Response {
 
-	public EmptyResponse(HttpURLConnection connection) {
-		super(connection);
-	}
+    public EmptyResponse(HttpURLConnection connection) {
+        super(connection);
+    }
 
 }

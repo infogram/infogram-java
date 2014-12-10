@@ -11,16 +11,20 @@ import javax.imageio.ImageIO;
  */
 public class GraphicsResponse extends Response {
 
-	private BufferedImage graphic;
-	
-	public GraphicsResponse(HttpURLConnection connection) {
-		super(connection);
-	}
+    private BufferedImage graphic;
 
-	public BufferedImage getGraphic() throws IOException {
-		if (graphic != null) return graphic;
-		
-		graphic = ImageIO.read(connection.getInputStream());
-		return graphic;
-	}
+    public GraphicsResponse(HttpURLConnection connection) {
+        super(connection);
+    }
+
+    public BufferedImage getGraphic() throws Exception {
+        if (graphic != null)
+            return graphic;
+        if (inputStreamUsed)
+            throw new Exception("Response stream already used elsewhere");
+
+        graphic = ImageIO.read(connection.getInputStream());
+        inputStreamUsed = true;
+        return graphic;
+    }
 }

@@ -11,26 +11,30 @@ import java.net.HttpURLConnection;
  */
 public class JsonResponse extends Response {
 
-	private String responseBody;
-	
-	public JsonResponse(HttpURLConnection connection) {
-		super(connection);
-	}
+    private String responseBody;
 
-	public String getResponseBody() throws IOException {
-		if (responseBody != null) return responseBody;
-		
-		InputStream is = connection.getInputStream();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		String resBody = "";
-		String line;
-		
-		while ((line = reader.readLine()) != null) {
-			resBody = resBody.concat(line);
-		}
-		
-		this.responseBody = resBody;
+    public JsonResponse(HttpURLConnection connection) {
+        super(connection);
+    }
 
-		return resBody;
-	}
+    public String getResponseBody() throws Exception {
+        if (responseBody != null)
+            return responseBody;
+        if (inputStreamUsed)
+            throw new Exception("Response stream already used elsewhere");
+
+        InputStream is = connection.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        String resBody = "";
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            resBody = resBody.concat(line);
+        }
+
+        this.responseBody = resBody;
+        inputStreamUsed = true;
+
+        return resBody;
+    }
 }
