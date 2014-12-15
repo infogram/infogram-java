@@ -1,4 +1,4 @@
-package am.infogr.api;
+package net.infogram.api;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -9,40 +9,37 @@ import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import javax.xml.bind.DatatypeConverter;
 
-import am.infogr.api.response.GraphicsResponse;
-import am.infogr.api.response.JsonResponse;
-import am.infogr.api.response.GenericResponse;
-import am.infogr.api.response.Response;
+import net.infogram.api.response.SimpleResponse;
+import net.infogram.api.response.Response;
 
 /**
  * A class for building, formatting and signing the request.
  */
 class RequestBuilder {
 
-    private final String consumerKey;
-    private final String consumerSecret;
+    private final String apiKey;
+    private final String apiSecret;
     private final String baseUrl;
     private final String requestMethod;
     private final List<Parameter> parameters;
-    private final ResponseType type;
 
     /**
      * Constructor of the builder, adds API key and signature to parameters,
      * constructs the base URL to pass on to the connection.
      */
-    public RequestBuilder(final String consumerKey, final String consumerSecret, final String baseUrl,
-            final String requestMethod, final List<Parameter> parameters, ResponseType type) {
+    public RequestBuilder(final String apiKey, final String apiSecret, final String baseUrl,
+            final String requestMethod, final List<Parameter> parameters) {
 
-        this.consumerKey = consumerKey;
-        this.consumerSecret = consumerSecret;
+        this.apiKey = apiKey;
+        this.apiSecret = apiSecret;
         this.baseUrl = baseUrl;
         this.requestMethod = requestMethod;
         this.parameters = new ArrayList<Parameter>(parameters);
-        this.type = type;
 
-        this.parameters.add(new Parameter("api_key", consumerKey));
+        this.parameters.add(new Parameter("api_key", apiKey));
         String signature = computeSignature(baseUrl, requestMethod, this.parameters);
         this.parameters.add(new Parameter("api_sig", signature));
     }
@@ -67,7 +64,7 @@ class RequestBuilder {
 
             sigBase += "&" + URLEncoder.encode(paramString, "UTF-8");
 
-            byte[] sigBaseHashed = Helpers.calculateRFC2104HMAC(sigBase, consumerSecret);
+            byte[] sigBaseHashed = Helpers.calculateRFC2104HMAC(sigBase, apiSecret);
 
             return DatatypeConverter.printBase64Binary(sigBaseHashed);
 
@@ -84,15 +81,6 @@ class RequestBuilder {
 
         HttpURLConnection connection = ConnectionManager.sendRequest(baseUrl, requestMethod, parameters);
 
-        switch (type) {
-        case JSON:
-            return new JsonResponse(connection);
-        case GRAPHIC:
-            return new GraphicsResponse(connection);
-        case GENERIC:
-            return new GenericResponse(connection);
-        default:
-            throw new UnsupportedOperationException("Unexpected response type");
-        }
+        return new SimpleResponse(connection);
     }
 }

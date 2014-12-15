@@ -1,4 +1,4 @@
-package am.infogr.api;
+package net.infogram.api;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

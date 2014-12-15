@@ -1,4 +1,4 @@
-package am.infogr.api.response;
+package net.infogram.api.response;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,17 +11,17 @@ public interface Response {
     public Map<String, List<String>> getHeaders();
     
     /** Get the HTTP response code. */
-    public int getResponseCode() throws IOException;
+    public int getHttpStatusCode();
     
     /** Get the HTTP response message. */
-    public String getResponseMessage() throws IOException;
+    public String getHttpStatusMessage();
     
     /** Returns true if the call was successful, false otherwise. */
-    public boolean success();
+    public boolean isSuccessful();
     
     /** Get the InputStream of the response body.
      * @throws IOException if there is no response body (e.g. 404 Not Found).
      */
-    public InputStream getInputStream() throws IOException;
+    public InputStream getResponseBody() throws IOException;
     
 }

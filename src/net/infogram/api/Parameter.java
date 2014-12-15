@@ -1,4 +1,4 @@
-package am.infogr.api;
+package net.infogram.api;
 
 /**
  * Represents a request parameter - a key/value pair, comparable by key.
