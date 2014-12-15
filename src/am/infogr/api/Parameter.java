@@ -3,7 +3,7 @@ package am.infogr.api;
 /**
  * Represents a request parameter - a key/value pair, comparable by key.
  */
-public class Parameter implements Comparable<Parameter> {
+class Parameter implements Comparable<Parameter> {
 
 	public final String key;
 	public final String value;

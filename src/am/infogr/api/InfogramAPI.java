@@ -1,167 +1,126 @@
 package am.infogr.api;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.RunnableFuture;
 
-import am.infogr.api.response.EmptyResponse;
-import am.infogr.api.response.GraphicsResponse;
-import am.infogr.api.response.JsonResponse;
-import am.infogr.api.response.PdfResponse;
+import am.infogr.api.response.Response;
 
 /**
- * Simple API call library. Supports the calls described in
- * http://developers.infogr.am/rest-api.
+ * Simple API call library for proxying the calls described in
+ * http://developers.infogr.am/rest.
  */
 public class InfogramAPI {
 
-    private final String consumer_key;
-    private final String consumer_secret;
+    private final String consumerKey;
+    private final String consumerSecret;
 
-    public InfogramAPI(final String consumer_key, final String consumer_secret) {
-        this.consumer_key = consumer_key;
-        this.consumer_secret = consumer_secret;
+    public InfogramAPI(final String consumerKey, final String consumerSecret) {
+        this.consumerKey = consumerKey;
+        this.consumerSecret = consumerSecret;
     }
 
     /**
-     * Get the metadata of the infographic.
+     * Constructs the Future object that contains the Response with the data.
      * 
-     * @param id
-     *            The ID of the infographic.
-     * @return A JsonResponse containing the infographic metadata.
-     */
-    public JsonResponse getInfographic(final String id) throws MalformedURLException, IOException {
-        RequestBuilder requestBuilder = RequestBuilder.getInfographicBuilder(consumer_key, consumer_secret, id);
-        JsonResponse response = (JsonResponse) requestBuilder.sendRequest();
-
-        return response;
-    }
-
-    /**
-     * Get all infographics.
-     * 
-     * @return A JsonResponse containing the list of all infographics of the
-     *         current user.
-     */
-    public JsonResponse getInfographicList() throws MalformedURLException, IOException {
-        RequestBuilder requestBuilder = RequestBuilder.getAllInfographicsBuilder(consumer_key,
-                consumer_secret);
-        JsonResponse response = (JsonResponse) requestBuilder.sendRequest();
-
-        return response;
-    }
-
-    /**
-     * Get all infographics of a given user.
-     * 
-     * @param userID
-     *            The ID (username) of the user.
-     * @return A JsonResponse containing the list of all infographics of the
-     *         specified user.
-     */
-    public JsonResponse getUserInfographicList(final String userID) throws MalformedURLException, IOException {
-        RequestBuilder requestBuilder = RequestBuilder.getUserInfographicsBuilder(consumer_key,
-                consumer_secret, userID);
-        JsonResponse response = (JsonResponse) requestBuilder.sendRequest();
-
-        return response;
-    }
-
-    /**
-     * Get all themes of the current user.
-     * 
-     * @return A JsonResponse containing the list of all themes of the current
-     *         user.
-     */
-    public JsonResponse getThemeList() throws MalformedURLException, IOException {
-        RequestBuilder requestBuilder = RequestBuilder.getThemeListBuilder(consumer_key, consumer_secret);
-        JsonResponse response = (JsonResponse) requestBuilder.sendRequest();
-
-        return response;
-    }
-
-    /**
-     * Create a new infographic. For the parameter format, see
-     * http://developers.infogr.am/rest-api/content-schema.html
-     * 
-     * @param content
-     *            The content of the infographic as a JSON string.
-     * @param theme_id
-     *            The ID of the theme.
-     * @param optParams
-     *            A key value map of optional parameters.
-     * @return A JsonResponse containing of the metadata of the created
-     *         infographic.
-     */
-    public JsonResponse createInfographic(final String content, final int theme_id,
-            final Map<String, String> optParams) throws MalformedURLException, IOException {
-        RequestBuilder requestBuilder = RequestBuilder.postInfographicBuilder(consumer_key, consumer_secret,
-                content, theme_id, optParams);
-        JsonResponse response = (JsonResponse) requestBuilder.sendRequest();
-
-        return response;
-    }
-
-    /**
-     * Update an infographic. For the parameters and their format, see
-     * http://developers.infogr.am/rest-api/put-infographics-id.html
-     * 
-     * @param id
-     *            The infographic ID
+     * @param requestMethod
+     *            GET, POST, PUT or DELETE
+     * @param target
+     *            The target of the call, e.g. infographics
      * @param parameters
-     *            A key value map of optional parameters.
+     *            A key-value map of parameters excluding api_key and api_sig.
+     * @param responseType
+     *            the response type for a formatted result
+     * @return
      */
-    public EmptyResponse updateInfographic(final String id, final Map<String, String> parameters)
-            throws MalformedURLException, IOException {
-        RequestBuilder requestBuilder = RequestBuilder.putInfographicBuilder(consumer_key, consumer_secret,
-                id, parameters);
-        EmptyResponse response = (EmptyResponse) requestBuilder.sendRequest();
-
-        return response;
+    public RunnableFuture<Response> sendAsyncRequest(final String requestMethod, final String target,
+            final Map<String, String> parameters, final ResponseType responseType) {
+        return new FutureTask<Response>(new Callable<Response>() {
+            @Override
+            public Response call() throws Exception {
+                return sendRequest(requestMethod, target, parameters, responseType);
+            }
+        });
     }
 
     /**
-     * Delete an infographic.
+     * Constructs a Future object containing a generic Response object providing
+     * InputStream only.
      * 
-     * @param id
-     *            The ID of the infographic to be deleted.
+     * @param requestMethod
+     *            GET, POST, PUT or DELETE
+     * @param target
+     *            The target of the call, e.g. infographics
+     * @param parameters
+     *            A key-value map of parameters excluding api_key and api_sig.
+     * @return
      */
-    public EmptyResponse deleteInfographic(final String id) throws MalformedURLException, IOException {
-        RequestBuilder requestBuilder = RequestBuilder.deleteInfographicBuilder(consumer_key,
-                consumer_secret, id);
-        EmptyResponse response = (EmptyResponse) requestBuilder.sendRequest();
-
-        return response;
+    public RunnableFuture<Response> sendAsyncRequest(final String requestMethod, final String target,
+            final Map<String, String> parameters) {
+        return sendAsyncRequest(requestMethod, target, parameters, ResponseType.GENERIC);
     }
 
     /**
-     * Get an image (PNG) of the infographic.
+     * Constructs a Response object containing the response code, message,
+     * headers and body
      * 
-     * @param id
-     *            The ID of the infographic.
-     * @return A GraphicsResponse containing the image.
+     * @param requestMethod
+     *            GET, POST, PUT or DELETE
+     * @param target
+     *            The target of the call, e.g. infographics
+     * @param parameters
+     *            A key-value map of parameters excluding api_key and api_sig.
+     * @param responseType
+     *            The response type for a formatted result
+     * @return A Response object or null if there was a problem with the
+     *         request.
+     * @throws Exception
      */
-    public GraphicsResponse getInfographicPng(final String id) throws MalformedURLException, IOException {
-        RequestBuilder requestBuilder = RequestBuilder.getInfographicPngBuilder(consumer_key,
-                consumer_secret, id);
-        GraphicsResponse response = (GraphicsResponse) requestBuilder.sendRequest();
+    public Response sendRequest(final String requestMethod, final String target,
+            final Map<String, String> parameters, final ResponseType responseType) throws Exception {
+        try {
+            String baseUrl = String.format("%s/%s", Constants.URL_BASE, target);
 
-        return response;
+            List<Parameter> paramList = new ArrayList<Parameter>();
+
+            if (parameters != null) {
+                paramList = new ArrayList<Parameter>(parameters.size());
+                for (Map.Entry<String, String> pair : parameters.entrySet()) {
+                    paramList.add(new Parameter(pair.getKey(), pair.getValue()));
+                }
+            }
+
+            RequestBuilder req = new RequestBuilder(consumerKey, consumerSecret, baseUrl, requestMethod,
+                    paramList, responseType);
+
+            return req.sendRequest();
+
+        } catch (Exception e) {
+            throw e;
+            // return null;
+        }
     }
 
     /**
-     * Get a PDF of the infographic.
+     * Constructs a generic Response object containing the response code,
+     * message, headers and body (InputStream only)
      * 
-     * @param id
-     *            The ID of the infographic
-     * @return A PdfResponse containing the PDF (as a stream only).
+     * @param requestMethod
+     *            GET, POST, PUT or DELETE
+     * @param target
+     *            The target of the call, e.g. infographics
+     * @param parameters
+     *            A key-value map of parameters excluding api_key and api_sig.
+     * @return A Response object or null if there was a problem with the
+     *         request.
+     * @throws Exception
      */
-    public PdfResponse getInfographicPdf(final String id) throws MalformedURLException, IOException {
-        RequestBuilder requestBuilder = RequestBuilder.getInfographicPdfBuilder(consumer_key,
-                consumer_secret, id);
-        PdfResponse response = (PdfResponse) requestBuilder.sendRequest();
-
-        return response;
-
+    public Response sendRequest(final String requestMethod, final String target,
+            final Map<String, String> parameters) throws Exception {
+        return sendRequest(requestMethod, target, parameters, ResponseType.GENERIC);
     }
+
 }

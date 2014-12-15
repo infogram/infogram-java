@@ -9,11 +9,11 @@ import java.net.HttpURLConnection;
 /**
  * Implementation of the Response class specific for a JSON response.
  */
-public class JsonResponse extends Response {
+public class JsonResponse extends GenericResponse {
 
     private String responseBody;
 
-    public JsonResponse(HttpURLConnection connection) {
+    public JsonResponse(HttpURLConnection connection) throws IOException {
         super(connection);
     }
 

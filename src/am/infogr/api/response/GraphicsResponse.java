@@ -9,11 +9,11 @@ import javax.imageio.ImageIO;
 /**
  * Implementation of the Response class specific for a graphics response.
  */
-public class GraphicsResponse extends Response {
+public class GraphicsResponse extends GenericResponse {
 
     private BufferedImage graphic;
 
-    public GraphicsResponse(HttpURLConnection connection) {
+    public GraphicsResponse(HttpURLConnection connection) throws IOException {
         super(connection);
     }
 
