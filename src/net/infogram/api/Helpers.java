@@ -1,4 +1,4 @@
-package am.infogr.api;
+package net.infogram.api;
 
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
@@ -9,7 +9,7 @@ import java.util.List;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-public class Helpers {
+class Helpers {
 
     static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 

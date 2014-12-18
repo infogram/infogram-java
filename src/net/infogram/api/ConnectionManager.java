@@ -1,4 +1,4 @@
-package am.infogr.api;
+package net.infogram.api;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Abstracts away the connection details.
  */
-public class ConnectionManager {
+class ConnectionManager {
 
     public static HttpURLConnection sendRequest(final String baseUrl, final String requestMethod,
             final List<Parameter> parameters) throws MalformedURLException, IOException {
