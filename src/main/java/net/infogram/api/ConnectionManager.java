@@ -14,16 +14,19 @@ import java.util.List;
  */
 class ConnectionManager {
 
+    private enum HttpMethod { GET, POST, PUT, DELETE }
+
     public static HttpURLConnection sendRequest(final String baseUrl, final String requestMethod,
             final List<Parameter> parameters) throws MalformedURLException, IOException {
-        switch (requestMethod) {
-        case "GET":
+        HttpMethod method = HttpMethod.valueOf(requestMethod);
+        switch (method) {
+        case GET:
             return sendGetRequest(baseUrl, parameters);
-        case "POST":
+        case POST:
             return sendPostRequest(baseUrl, parameters);
-        case "PUT":
+        case PUT:
             return sendPutRequest(baseUrl, parameters);
-        case "DELETE":
+        case DELETE:
             return sendDeleteRequest(baseUrl, parameters);
         default:
             // all request methods should be anticipated
