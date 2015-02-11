@@ -4,7 +4,7 @@ A library to view, create and update infographics on Infogr.am. For details on t
 
 ##Usage
 
-To make the API calls, use the `am.infogr.api.InfogramAPI` class. The response is wrapped in an appropriate Response object, containing the metadata and the body of the response. The response body can be accessed via a `java.io.InputStream`.
+To make the API calls, use the `net.infogram.api.InfogramAPI` class. The response is wrapped in an appropriate Response object, containing the metadata and the body of the response. The response body can be accessed via a `java.io.InputStream`.
 
 ```java
 import net.infogram.api.InfogramAPI;
@@ -17,7 +17,7 @@ try {
     Response response = infogram.sendRequest("GET", "infographics", null);
 
     if (response.isSuccessful()) {
-        InputStream is = response.getInputStream();
+        InputStream is = response.getResponseBody();
 
         // ...
     } else {
