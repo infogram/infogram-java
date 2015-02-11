@@ -1,0 +1,24 @@
+<project name="infogram-java" default="dist" basedir=".">
+  <property name="name" value="infogram-java"/>
+  <property name="version" value="0.1"/>
+  <property name="src" location="src/main/java"/>
+  <property name="build" location="target/classes"/>
+  <property name="dist"  location="target"/>
+
+  <target name="init">
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init">
+    <javac includeantruntime="false" srcdir="${src}" destdir="${build}"/>
+  </target>
+
+  <target name="dist" depends="compile">
+    <jar jarfile="${dist}/${name}-${version}.jar" basedir="${build}"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+</project>
