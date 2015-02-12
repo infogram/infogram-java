@@ -33,7 +33,7 @@ public class SimpleResponse implements Response {
         this.responseCode = connection.getResponseCode();
         this.responseMessage = connection.getResponseMessage();
         this.headers = connection.getHeaderFields();
-        
+
     }
 
     @Override

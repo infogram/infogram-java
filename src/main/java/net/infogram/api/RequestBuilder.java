@@ -46,7 +46,7 @@ class RequestBuilder {
 
     /**
      * Computes the signature to use in the request authentication.
-     * 
+     *
      * @param baseUrl
      * @param requestMethod
      * @param parameters

@@ -23,7 +23,7 @@ public class InfogramAPI {
     /**
      * Constructs a Response object containing the response code, message,
      * headers and body.
-     * 
+     *
      * @param requestMethod
      *            GET, POST, PUT or DELETE
      * @param target
