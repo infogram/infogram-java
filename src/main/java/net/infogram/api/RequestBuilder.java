@@ -77,7 +77,7 @@ class RequestBuilder {
         }
     }
 
-    public Response sendRequest() throws MalformedURLException, IOException {
+    public Response sendRequest() throws IOException {
 
         HttpURLConnection connection = ConnectionManager.sendRequest(baseUrl, requestMethod, parameters);
 

@@ -17,7 +17,7 @@ class ConnectionManager {
     private enum HttpMethod { GET, POST, PUT, DELETE }
 
     public static HttpURLConnection sendRequest(final String baseUrl, final String requestMethod,
-            final List<Parameter> parameters) throws MalformedURLException, IOException {
+            final List<Parameter> parameters) throws IOException {
         HttpMethod method = HttpMethod.valueOf(requestMethod);
         switch (method) {
         case GET:
@@ -35,7 +35,7 @@ class ConnectionManager {
     }
 
     public static HttpURLConnection sendGetRequest(final String baseUrl, final List<Parameter> parameters)
-            throws MalformedURLException, IOException {
+            throws IOException {
         String url = new String(baseUrl);
         url += "?" + Helpers.encodedParameterStringFromList(parameters);
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
@@ -46,9 +46,9 @@ class ConnectionManager {
      * Overlapping code for sending POST and PUT requests.
      */
     public static HttpURLConnection sendPostPutRequest(final String requestMethod, final String baseUrl,
-            final List<Parameter> parameters) throws MalformedURLException, IOException {
+            final List<Parameter> parameters) throws IOException {
 
-        String postdata = Helpers.encodedParameterStringFromList(parameters);
+        String postData = Helpers.encodedParameterStringFromList(parameters);
         HttpURLConnection connection = (HttpURLConnection) new URL(baseUrl).openConnection();
         connection.setDoOutput(true);
         connection.setRequestMethod(requestMethod);
@@ -57,7 +57,7 @@ class ConnectionManager {
         // send the request parameters
         OutputStream os = connection.getOutputStream();
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-        writer.write(postdata);
+        writer.write(postData);
         writer.flush();
         writer.close();
 
@@ -67,12 +67,12 @@ class ConnectionManager {
     }
 
     public static HttpURLConnection sendPostRequest(final String baseUrl, final List<Parameter> parameters)
-            throws MalformedURLException, IOException {
+            throws IOException {
         return sendPostPutRequest("POST", baseUrl, parameters);
     }
 
     public static HttpURLConnection sendPutRequest(final String baseUrl, final List<Parameter> parameters)
-            throws MalformedURLException, IOException {
+            throws IOException {
         return sendPostPutRequest("PUT", baseUrl, parameters);
     }
 
