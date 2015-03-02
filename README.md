@@ -63,3 +63,5 @@ Response response = responseFuture.get();
 
 executor.shutdown();
 ```
+
+More samples can be found in [infogram-java-samples](https://github.com/infogram/infogram-java-samples) project
