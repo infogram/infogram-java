@@ -61,6 +61,11 @@ public class SimpleResponse implements Response {
 
     @Override
     public InputStream getResponseBody() throws IOException {
-        return connection.getInputStream();
+        if (responseCode >= 200 && responseCode < 300) {
+            return connection.getInputStream();
+        }
+        else {
+            return connection.getErrorStream();
+        }
     }
 }
