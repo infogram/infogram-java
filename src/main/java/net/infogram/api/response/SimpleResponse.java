@@ -24,7 +24,7 @@ public class SimpleResponse implements Response {
 
     /**
      * Construct a generic response object for the given connection.
-     * @param connection
+     * @param connection a HttpURLConnection
      * @throws IOException if there was a problem connecting to the server.
      */
     public SimpleResponse(final HttpURLConnection connection) throws IOException {

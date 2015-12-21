@@ -30,11 +30,9 @@ public class InfogramAPI {
      *            The target of the call, e.g. infographics
      * @param parameters
      *            A key-value map of parameters excluding api_key and api_sig.
-     * @param responseType
-     *            The response type for a formatted result
      * @return A Response object or null if there was a problem with the
      *         request.
-     * @throws Exception
+     * @throws java.io.IOException in case of I/O errors
      */
     public Response sendRequest(final String requestMethod, final String target,
             final Map<String, String> parameters) throws IOException {
